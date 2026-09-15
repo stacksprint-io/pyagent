@@ -95,5 +95,5 @@ for tools.
 
 ## License
 
-MIT — see [LICENSE](LICENSE). Have fun, and point it at your own failing
+MIT, see the LICENSE file in this repo. Have fun, and point it at your own failing
 test.
