@@ -93,6 +93,35 @@ for tools.
 - add tools: search, `git`, your own deploy script — the loop does not change
 - run several agents at once, one per bug, each in its own copy of the repo
 
+## Point it at your own codebase
+
+The agent is not tied to this repo. Two files travel anywhere:
+
+1. Copy `agent.py`, `tools.py`, and your `.env` into the root of any
+   project (or clone this repo next to it and run from your project's
+   directory).
+2. Open `tools.py` and change one line — the test command in
+   `run_tests()`:
+
+   ```python
+   ["python3", "-m", "pytest", "buggy/", "-q"]
+   ```
+
+   Point it at your own tests (`"tests/"`, or drop the path entirely to
+   run the whole suite). Not a pytest project? Swap in whatever proves
+   your code works — `npm test`, `cargo test`, `make check` — the agent
+   only ever sees the text the command prints.
+3. Run it with a prompt about your own failing test:
+
+   ```bash
+   python3 agent.py "test_login is failing. Find the bug and fix it."
+   ```
+
+The guardrails travel with it: every edit still shows the exact change
+and waits five seconds for your `ctrl+c`, and the loop still stops at
+ten steps. Start with a small, genuinely failing test — that is the
+shape of task this loop is best at.
+
 ## License
 
 MIT, see the LICENSE file in this repo. Have fun, and point it at your own failing
