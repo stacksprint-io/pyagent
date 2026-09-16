@@ -5,7 +5,7 @@ no framework of any kind. Just Python, the standard library, and one HTTPS
 call to Anthropic's API.
 
 This is the companion repo for the StackSprint tutorial video. The repo ships
-with **two real bugs already in it**, so the first thing your agent does is
+with **three real bugs already in it**, so the first thing your agent does is
 fix something that is genuinely broken.
 
 ```
@@ -13,6 +13,7 @@ agent.py            the loop        (~76 lines)
 tools.py            three tools     (~70 lines)
 buggy/invoice.py    bug #1: a one-cent rounding error
 buggy/ledger.py     bug #2: the classic mutable default trap
+buggy/receipt.py    bug #3: floats truncated to cents
 buggy/test_*.py     the failing tests that prove them
 ```
 
@@ -64,6 +65,30 @@ Then try the second bug:
 ```bash
 python3 agent.py "One test is still failing, in the ledger. Find it and fix it."
 ```
+
+And the third:
+
+```bash
+python3 agent.py "The receipt test is failing. Find the bug and fix it."
+```
+
+## Race them in parallel
+
+The loop does not care how many copies of it are running. Clone the repo
+three times, drop the same `.env` in each, and give every copy one bug:
+
+```bash
+git clone https://github.com/stacksprint-io/pyagent.git race-a
+git clone https://github.com/stacksprint-io/pyagent.git race-b
+git clone https://github.com/stacksprint-io/pyagent.git race-c
+# copy your .env into each, then in three terminals:
+cd race-a && python3 agent.py "The pricing test is failing. Find the bug and fix it."
+cd race-b && python3 agent.py "The ledger test is failing. Find it and fix it."
+cd race-c && python3 agent.py "The receipt test is failing. Find the bug and fix it."
+```
+
+Each agent works in its own copy, so they can never touch each other's
+files — that isolation is the whole trick to running agents in parallel.
 
 ## How the loop works
 
